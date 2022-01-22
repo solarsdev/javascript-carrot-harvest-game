@@ -68,3 +68,27 @@ body {
   justify-content: center;
   align-items: center;
 }
+
+.game-field {
+  position: relative;
+}
+
+.game-field__carrot {
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+}
+
+.game-field__carrot:hover {
+  transform: scale(1.2);
+}
+
+.game-field__bug {
+  cursor: pointer;
+  position: absolute;
+  z-index: 2;
+}
+
+.game-field__bug:hover {
+  transform: scale(1.2);
+}
