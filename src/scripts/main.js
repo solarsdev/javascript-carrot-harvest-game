@@ -4,9 +4,9 @@ const playBtn = document.querySelector('.game-info__play-btn');
 const audioBg = new Audio('sound/bg.mp3');
 const audioAlert = new Audio('sound/alert.wav');
 
-const configPlayTime = 15;
-const configCarrotNum = 15;
-const configBugNum = 15;
+const configPlayTime = 10;
+const configCarrotNum = 10;
+const configBugNum = 7;
 
 const createCarrotElement = (x, y) => {
   const carrot = document.createElement('img');
