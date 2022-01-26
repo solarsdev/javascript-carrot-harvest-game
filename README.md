@@ -4,7 +4,7 @@
   <a href="https://github.com/kefranabg/readme-md-generator/graphs/commit-activity" target="_blank">
     <img alt="Maintenance" src="https://img.shields.io/badge/Maintained%3F-no-red.svg" />
   </a>
-    <img alt="License: MIT" src="https://img.shields.io/github/license/solarsdev/javascript-carrot-harvest-game" />
+    <img alt="License: MIT" src="https://img.shields.io/github/license/solarsdev/javascript-carrot-harvest-game?style=plastic" />
   </a>
 </p>
 
