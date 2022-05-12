@@ -1,10 +1,9 @@
 'use strict';
 
+import GamePopup from './popup.js';
+
 const playBtn = document.querySelector('.game-info__play-btn');
 const gameField = document.querySelector('.game-field');
-const gamePopup = document.querySelector('.game-popup');
-const redoBtn = document.querySelector('.game-popup__redo-btn');
-const resultText = document.querySelector('.game-popup__result-text');
 
 // game assets
 const audioBg = new Audio('sound/bg.mp3');
@@ -21,6 +20,11 @@ let playing = 0;
 let carrotLeft = 0;
 let gameId = 0;
 let timeLeft = 0;
+
+const gameFninishBanner = new GamePopup();
+gameFninishBanner.setClickListener(() => {
+  startGame();
+});
 
 const createCarrotElement = (x, y) => {
   const carrot = document.createElement('img');
@@ -101,30 +105,30 @@ const setupGame = () => {
 };
 
 const gameWon = () => {
-  resultText.innerText = 'YOU WON 🎉';
+  gameFninishBanner.showWithText('YOU WON 🎉');
   audioWin.currentTime = 0;
   audioWin.play();
   endGame();
 };
 
 const gameLost = () => {
-  resultText.innerText = 'YOU LOST 😭';
+  gameFninishBanner.showWithText('YOU LOST 😭');
   audioAlert.currentTime = 0;
   audioAlert.play();
   endGame();
 };
 
 const stopGame = () => {
-  resultText.innerText = 'RESTART';
+  gameFninishBanner.showWithText('RESTART');
   audioAlert.currentTime = 0;
   audioAlert.play();
   endGame();
 };
 
 const startGame = () => {
-  gamePopup.style.visibility = 'hidden';
-  playBtn.style.visibility = 'visible';
-  playBtn.innerHTML = '<i class="fas fa-stop"></i>';
+  gameFninishBanner.hide();
+  playBtn.style.visibility = 'hidden';
+  playBtn.innerHTML = '<i class="fas fa-play"></i>';
   audioBg.currentTime = 0;
   audioBg.play();
   setupGame();
@@ -149,9 +153,6 @@ const startGame = () => {
 };
 
 const endGame = () => {
-  gamePopup.style.visibility = 'visible';
-  playBtn.style.visibility = 'hidden';
-  playBtn.innerHTML = '<i class="fas fa-play"></i>';
   audioBg.pause();
 
   if (gameId) {
@@ -171,8 +172,4 @@ playBtn.addEventListener('click', () => {
       stopGame();
       break;
   }
-});
-
-redoBtn.addEventListener('click', () => {
-  startGame();
 });

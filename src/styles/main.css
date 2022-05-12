@@ -42,6 +42,11 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: transform 300ms ease-in-out;
+}
+
+.game-info__play-btn:hover {
+  transform: scale(1.1);
 }
 
 .game-info__timer {
@@ -120,6 +125,11 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  transition: transform 300ms ease-in-out;
+}
+
+.game-popup__redo-btn:hover {
+  transform: scale(1.1);
 }
 
 .game-popup__result-text {
