@@ -7,7 +7,7 @@ export default class GamePopup {
     this.resultText = document.querySelector('.game-popup__result-text');
     this.redoBtn.addEventListener('click', () => {
       this.onClick && this.onClick();
-      hide();
+      this.hide();
     });
   }
 

@@ -10,6 +10,7 @@ body {
 }
 
 .app {
+  position: relative;
   margin-top: 50px;
   width: 768px;
   height: 500px;
@@ -102,6 +103,12 @@ body {
 }
 
 .game-popup {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  top: 300px;
+  left: 0;
+  right: 0;
   width: 350px;
   border-radius: 20px;
   padding: 20px;
