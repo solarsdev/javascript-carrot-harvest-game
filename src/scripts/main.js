@@ -2,13 +2,9 @@
 
 import GamePopup from './popup.js';
 import GameField from './field.js';
+import * as sound from './sound.js';
 
 const playBtn = document.querySelector('.game-info__play-btn');
-
-// game assets
-const audioBg = new Audio('sound/bg.mp3');
-const audioAlert = new Audio('sound/alert.wav');
-const audioWin = new Audio('sound/game_win.mp3');
 
 // game configs
 const configPlayTime = 10;
@@ -45,19 +41,19 @@ function onItemClick(item) {
 
 const gameWon = () => {
   gameFninishBanner.showWithText('YOU WON 🎉');
-  playSound(audioWin);
+  sound.playWin();
   endGame();
 };
 
 const gameLost = () => {
   gameFninishBanner.showWithText('YOU LOST 😭');
-  playSound(audioAlert);
+  sound.playAlert();
   endGame();
 };
 
 const stopGame = () => {
   gameFninishBanner.showWithText('RESTART');
-  playSound(audioAlert);
+  sound.playAlert();
   endGame();
 };
 
@@ -65,8 +61,7 @@ const startGame = () => {
   gameFninishBanner.hide();
   playBtn.style.visibility = 'hidden';
   playBtn.innerHTML = '<i class="fas fa-play"></i>';
-  audioBg.currentTime = 0;
-  audioBg.play();
+  sound.playBGM();
   gameField.setup();
   playing = 1;
   score = 0;
@@ -90,14 +85,13 @@ const startGame = () => {
 };
 
 const endGame = () => {
-  audioBg.pause();
+  playing = 0;
+  sound.stopBGM();
 
   if (gameId) {
     clearInterval(gameId);
     gameId = 0;
   }
-
-  playing = 0;
 };
 
 playBtn.addEventListener('click', () => {
@@ -110,8 +104,3 @@ playBtn.addEventListener('click', () => {
       break;
   }
 });
-
-function playSound(sound) {
-  sound.currentTime = 0;
-  sound.play();
-}

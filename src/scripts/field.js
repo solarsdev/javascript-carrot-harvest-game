@@ -1,16 +1,16 @@
 'use strict';
 
+import * as sound from './sound.js';
+
 export default class GameField {
   static CARROT_SIZE = 80;
-  static audioBugPull = new Audio('sound/bug_pull.mp3');
-  static audioCarrotPull = new Audio('sound/carrot_pull.mp3');
 
   constructor(carrotCount, bugCount) {
     this.carrotCount = carrotCount;
     this.bugCount = bugCount;
     this.gameField = document.querySelector('.game-field');
     this.gameFieldRect = this.gameField.getBoundingClientRect();
-    this.gameField.addEventListener('click', (event) => this.onClick(event));
+    this.gameField.addEventListener('click', this.onClick);
   }
 
   setClickListener(onItemClick) {
@@ -44,20 +44,15 @@ export default class GameField {
     return Math.random() * (max - min) + min;
   }
 
-  onClick(event) {
+  onClick = (event) => {
     const target = event.target;
     if (target.matches('.game-field__carrot')) {
       target.remove();
-      playSound(GameField.audioCarrotPull);
+      sound.playCarrotPull();
       this.onItemClick && this.onItemClick('carrot');
     } else if (target.matches('.game-field__bug')) {
-      playSound(GameField.audioBugPull);
+      sound.playBugPull();
       this.onItemClick && this.onItemClick('bug');
     }
-  }
-}
-
-function playSound(sound) {
-  sound.currentTime = 0;
-  sound.play();
+  };
 }
