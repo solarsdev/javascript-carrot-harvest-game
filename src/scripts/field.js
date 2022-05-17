@@ -2,6 +2,10 @@
 
 import * as sound from './sound.js';
 
+export const ItemType = Object.freeze({
+  carrot: 'carrot',
+  bug: 'bug',
+});
 export default class GameField {
   static CARROT_SIZE = 80;
 
@@ -49,10 +53,10 @@ export default class GameField {
     if (target.matches('.game-field__carrot')) {
       target.remove();
       sound.playCarrotPull();
-      this.onItemClick && this.onItemClick('carrot');
+      this.onItemClick && this.onItemClick(ItemType.carrot);
     } else if (target.matches('.game-field__bug')) {
       sound.playBugPull();
-      this.onItemClick && this.onItemClick('bug');
+      this.onItemClick && this.onItemClick(ItemType.bug);
     }
   };
 }

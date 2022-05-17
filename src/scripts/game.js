@@ -1,10 +1,37 @@
 'use strict';
 
 import GamePopup from './popup.js';
-import GameField from './field.js';
+import GameField, { ItemType } from './field.js';
 import * as sound from './sound.js';
 
-export default class Game {
+// Builder Pattern
+export default class GameBuilder {
+  withGameDuration(duration) {
+    this.gameDuration = duration;
+    return this;
+  }
+
+  withCarrotCount(count) {
+    this.carrotCount = count;
+    return this;
+  }
+
+  withBugCount(count) {
+    this.bugCount = count;
+    return this;
+  }
+
+  build() {
+    console.log(this);
+    return new Game(
+      this.gameDuration, //
+      this.carrotCount, //
+      this.bugCount //
+    );
+  }
+}
+
+class Game {
   constructor(playDuration, carrotCount, bugCount) {
     this.playDuration = playDuration;
     this.carrotCount = carrotCount;
@@ -42,13 +69,13 @@ export default class Game {
       if (!this.playing) {
         return;
       }
-      if (item === 'carrot') {
+      if (item === ItemType.carrot) {
         this.score++;
         this.#updateScoreText(this.carrotCount - this.score);
         if (this.score === this.carrotCount) {
           this.#won();
         }
-      } else if (item === 'bug') {
+      } else if (item === ItemType.bug) {
         this.#lost();
       }
     });
@@ -88,7 +115,7 @@ export default class Game {
   };
 
   #stop = () => {
-    this.gameFinishBanner.showWithText('RESTART');
+    this.gameFinishBanner.showWithText('RESTART❓');
     sound.playAlert();
     this.#end();
   };
