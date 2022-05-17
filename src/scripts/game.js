@@ -5,35 +5,33 @@ import GameField from './field.js';
 import * as sound from './sound.js';
 
 export default class Game {
-  constructor(playTime, carrotCount, bugCount) {
+  constructor(playDuration, carrotCount, bugCount) {
+    this.playDuration = playDuration;
+    this.carrotCount = carrotCount;
+    this.bugCount = bugCount;
+
+    this.timerText = document.querySelector('.game-info__timer');
+    this.carrotsLeft = document.querySelector('.game-info__carrots-left');
     this.playBtn = document.querySelector('.game-info__play-btn');
-    this.playBtn.addEventListener('click', () => {
-      switch (this.playing) {
-        case 0:
-          this.startGame();
-          break;
-        case 1:
-          this.stopGame();
-          break;
-      }
-    });
-    this.#initConfig(playTime);
+    this.playBtn.addEventListener('click', () =>
+      this.playing ? this.#stop() : this.#start()
+    );
+
+    this.#initConfig();
     this.#initGamePopUp();
     this.#initGameField(carrotCount, bugCount);
   }
 
-  #initConfig = (playTime) => {
-    this.playTime = playTime;
-    this.playing = 0;
+  #initConfig = () => {
+    this.playing = false;
     this.score = 0;
-    this.gameId = 0;
-    this.timeLeft = 0;
+    this.timer = undefined;
   };
 
   #initGamePopUp = () => {
     this.gameFinishBanner = new GamePopup();
     this.gameFinishBanner.setClickListener(() => {
-      this.startGame();
+      this.#start();
     });
   };
 
@@ -46,62 +44,73 @@ export default class Game {
       }
       if (item === 'carrot') {
         this.score++;
+        this.#updateScoreText(this.carrotCount - this.score);
         if (this.score === this.carrotCount) {
-          this.gameWon();
+          this.#won();
         }
       } else if (item === 'bug') {
-        this.gameLost();
+        this.#lost();
       }
     });
   };
 
-  startGame = () => {
-    this.gameFinishBanner.hide();
-    this.playBtn.style.visibility = 'hidden';
-    this.gameField.setup();
-    this.score = 0;
-    this.timeLeft = this.playTime;
-    this.timeIndicator = document.querySelector('.game-info__timer');
-    this.timeIndicator.innerText = new Date(this.timeLeft * 1000)
-      .toString()
-      .substring(19, 24);
-    this.gameId = setInterval(() => {
-      this.timeLeft--;
-      this.timeIndicator.innerText = new Date(this.timeLeft * 1000)
-        .toString()
-        .substring(19, 24);
-      if (this.timeLeft < 1) {
-        this.gameLost();
+  #updateScoreText = (carrotsLeft) => {
+    this.carrotsLeft.innerText = `${carrotsLeft}`;
+  };
+
+  #startTimer = () => {
+    let remainingTimeSeconds = this.playDuration;
+    this.#updateTimerText(remainingTimeSeconds);
+
+    this.timer = setInterval(() => {
+      this.#updateTimerText(--remainingTimeSeconds);
+      if (remainingTimeSeconds <= 0) {
+        this.#lost();
       }
     }, 1000);
+  };
+
+  #updateTimerText = (timeleft) => {
+    this.timerText.innerText = new Date(timeleft * 1000)
+      .toString()
+      .substring(19, 24);
+  };
+
+  #start = () => {
+    this.playing = true;
+    this.playBtn.style.visibility = 'hidden';
+    this.gameField.setup();
+    this.gameFinishBanner.hide();
+    this.#startTimer();
+    this.score = 0;
+    this.#updateScoreText(this.carrotCount - this.score);
     sound.playBGM();
-    this.playing = 1;
   };
 
-  endGame = () => {
-    if (this.gameId) {
-      clearInterval(this.gameId);
-      this.gameId = 0;
-    }
-    sound.stopBGM();
-    this.playing = 0;
-  };
-
-  gameWon = () => {
-    this.gameFinishBanner.showWithText('YOU WON 🎉');
-    sound.playWin();
-    this.endGame();
-  };
-
-  gameLost = () => {
-    this.gameFinishBanner.showWithText('YOU LOST 😭');
-    sound.playAlert();
-    this.endGame();
-  };
-
-  stopGame = () => {
+  #stop = () => {
     this.gameFinishBanner.showWithText('RESTART');
     sound.playAlert();
-    this.endGame();
+    this.#end();
+  };
+
+  #won = () => {
+    this.gameFinishBanner.showWithText('YOU WON 🎉');
+    sound.playWin();
+    this.#end();
+  };
+
+  #lost = () => {
+    this.gameFinishBanner.showWithText('YOU LOST 😭');
+    sound.playAlert();
+    this.#end();
+  };
+
+  #end = () => {
+    this.playing = false;
+    if (this.timer !== undefined) {
+      clearInterval(this.timer);
+      this.timer = undefined;
+    }
+    sound.stopBGM();
   };
 }
